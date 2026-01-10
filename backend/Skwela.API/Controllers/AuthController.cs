@@ -17,22 +17,50 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        var token = await _authService.LoginAsync(
-            request.Username,
-            request.Password
-        );
+        try
+        {
+            var token = await _authService.LoginAsync(
+                request.username,
+                request.password
+            );
 
-        return Ok(new { token });
+            return Ok(new { token });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized("Invalid credentials.");
+        }
     }
 
     [HttpPost("signup")]
     public async Task<IActionResult> Signup(SignupRequest request)
-    {
-        var userId = await _authService.SignupAsync(
-            request.Username,
-            request.Password
-        );
+    {   
+        try
+        {
+            var userId = await _authService.SignupAsync(
+                request.username,
+                request.password
+            );
+            return Ok(new { userId });
+        }
+        catch (InvalidDataException)
+        {
+            return BadRequest("Signup Failed.");
+        }
 
-        return Ok(new { userId });
+    }
+
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshTokenAsync(RefreshTokenRequest request)
+    {
+        try
+        {
+            var result = await _authService.RefreshTokenAsync(request.accessToken, request.refreshToken);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized("Invalid token.");
+        }
     }
 }

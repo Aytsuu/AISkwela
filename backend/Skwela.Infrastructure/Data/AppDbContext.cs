@@ -20,10 +20,12 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Username).IsRequired().HasMaxLength(100);
-            entity.Property(e => e.PasswordHash).IsRequired();
-            entity.Property(e => e.Role).IsRequired().HasDefaultValue(UserRole.Student);
+            entity.HasKey(e => e.id);
+            entity.Property(e => e.username).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.password).IsRequired();
+            entity.Property(e => e.role).IsRequired().HasDefaultValue(UserRole.Student);
+            entity.Property(e => e.refreshToken);
+            entity.Property(e => e.refreshTokenExpiryTime);
         });
     }
 }

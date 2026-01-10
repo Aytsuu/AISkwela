@@ -1,1 +1,1 @@
-public record SignupRequest(string Username, string Password, string Role);
+public record SignupRequest(string username, string password);
