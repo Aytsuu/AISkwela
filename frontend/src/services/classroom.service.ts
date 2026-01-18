@@ -1,4 +1,4 @@
-import { ClassroomCreateRequest } from "../types/classroom";
+import { ClassroomCreateRequest, ClassroomResponse } from "../types/classroom";
 import { api } from "./api.service";
 
 export const ClassroomService = {
@@ -13,6 +13,14 @@ export const ClassroomService = {
   getByUserId: async (userId: string) => {
     try {
       const res = await api.get(`api/classroom/get/${userId}`)
+      return res.data;
+    } catch (err) {
+      throw err;
+    }
+  },
+  getData: async (classId: string, userId: string, role: string) => {
+    try {
+      const res = await api.get<ClassroomResponse>(`api/classroom/get/${classId}/${userId}/${role}`);
       return res.data;
     } catch (err) {
       throw err;

@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Classroom> Classrooms => Set<Classroom>();
+    public DbSet<Enrollment> Enrollments => Set<Enrollment>();
     //public DbSet<Assignment> Assignments => Set<Assignment>();
     //public DbSet<Submission> Submissions => Set<Submission>();
 
@@ -45,6 +46,16 @@ public class AppDbContext : DbContext
             entity.HasIndex(e => e.user_id);
             entity.HasIndex(e => e.class_id);
         });
+
+        modelBuilder.Entity<Enrollment>(entity =>
+        {
+            entity.HasKey(e => e.class_id);
+            entity.HasKey(e => e.user_id);
+            entity.Property(e => e.enrolled_at).IsRequired();
+            entity.Property(e => e.enrolled_status).IsRequired().HasMaxLength(50);
+        });
+
+
     }
 
 }

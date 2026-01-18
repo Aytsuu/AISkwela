@@ -1,7 +1,6 @@
 using Skwela.Application.Interfaces;
 using Skwela.Domain.Entities;
 
-
 namespace Skwela.Application.UseCases.Classrooms;
 
 public class CreateClassroomUseCase
@@ -15,7 +14,7 @@ public class CreateClassroomUseCase
 
     public async Task<Classroom> ExecuteAsync(CreateClassroomDto dto)
     {
-        var classroom = Classroom.Create( dto.userId, dto.name, dto.description);
+        var classroom = Classroom.Build( dto.userId, dto.name, dto.description);
         return await _repository.AddAsync(classroom);
     }
 }

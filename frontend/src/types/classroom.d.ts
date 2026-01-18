@@ -9,4 +9,6 @@ export interface ClassroomResponse {
   class_name: string;
   class_description: string;
   class_created_at: string;
+  creator_name: string;
+  creator_image: string;
 }

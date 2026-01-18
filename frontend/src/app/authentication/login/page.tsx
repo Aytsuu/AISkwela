@@ -9,9 +9,10 @@ import { useForm } from "react-hook-form";
 import { Button } from "../../../components/ui/button";
 import { useLayoutEffect, useState } from "react";
 import { useLogin } from "../../../hooks/useAuth";
-import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {

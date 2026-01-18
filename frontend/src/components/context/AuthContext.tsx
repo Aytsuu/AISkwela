@@ -22,21 +22,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const restoreUser = () => {
       const accessToken = Cookies.get('accessToken')
-      if (accessToken) {
-        try {
-          const decode: any = jwtDecode(accessToken);
-          const userData: UserProfile = {
-            userId: decode.sub,
-            username: decode.unique_name,
-            displayName: decode.name,
-            displayImage: decode.display_image,
-            role: decode['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
-          }
-          setUser(userData);
-        } catch (error) {
-          alert("Invalid token found. Please login again.")
-          AuthService.logout();
+
+      if (!accessToken) return;
+
+      try {
+        const decode: any = jwtDecode(accessToken);
+        const userData: UserProfile = {
+          userId: decode.sub,
+          username: decode.unique_name,
+          displayName: decode.name,
+          displayImage: decode.display_image,
+          role: decode['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
         }
+        setUser(userData);
+      } catch (error) {
+        alert("Invalid token found. Please login again.")
+        AuthService.logout();
       }
     }
 

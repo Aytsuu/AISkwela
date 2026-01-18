@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Skwela.Application.Interfaces;
 using Skwela.Application.UseCases.Auth;
 
 namespace Skwela.API.Controllers;

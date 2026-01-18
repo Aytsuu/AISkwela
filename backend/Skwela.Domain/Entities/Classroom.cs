@@ -5,19 +5,19 @@ namespace Skwela.Domain.Entities;
 
 public class Classroom
 {
-    public Guid class_id { get; set; }
+    public required Guid class_id { get; set; }
     public string class_name { get; set; } = string.Empty;
     public string class_description { get; set; } = string.Empty;
-    public DateTime class_created_at { get; set; } = DateTime.UtcNow;
+    public required DateTime class_created_at { get; set; } = DateTime.UtcNow;
     // Foreign Key
-    public Guid user_id { get; set; }
+    public required Guid user_id { get; set; }
 
     [ForeignKey("user_id")]
     public User? user { get; set; }
 
     private Classroom() { }
 
-    public static Classroom Create(Guid userId, string? name, string? description)
+    public static Classroom Build(Guid userId, string? name, string? description)
     {
         // Validation (Guard Clauses
         if (userId == Guid.Empty)

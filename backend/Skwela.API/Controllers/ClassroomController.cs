@@ -1,8 +1,8 @@
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Skwela.Application.Interfaces;
 using Skwela.Application.UseCases.Classrooms;
+using Skwela.Domain.Enums;
 
 namespace Skwela.API.Controllers;
 
@@ -43,6 +43,29 @@ public class ClassroomsController : ControllerBase
         {
             var classrooms = await _getUseCase.ExecuteGetByUserIdAsync(userId);
             return Ok(classrooms);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("get/{classId}/{userId}/{role}")]
+    public async Task<IActionResult> GetClassroomData(Guid classId, Guid userId, UserRole role)
+    {
+        try
+        {
+            var classroom = await _getUseCase.GetClassroomDataAsync(classId, userId, role);
+            return Ok(classroom);
+        }
+        catch (KeyNotFoundException knfEx)
+        {
+            return NotFound(knfEx.Message);
+        }
+        catch (UnauthorizedAccessException uaEx)
+        {
+            return Forbid(uaEx.Message);
         }
         catch (Exception ex)
         {

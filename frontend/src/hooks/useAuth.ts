@@ -13,24 +13,25 @@ export const useLogin = () => {
     onSuccess: (data) => {
 
       const { accessToken, refreshToken, ...rest } = data;
+      const isProduction = process.env.NODE_ENV === "production";
 
       const sixtyMinutes = new Date(new Date().getTime() + 60 * 60 * 1000);
       Cookies.set('accessToken', accessToken, {
         expires: sixtyMinutes, // 60 mins
-        secure: true,
+        secure: isProduction,
         sameSite: 'Strict',
         path: '/'
       })
 
       Cookies.set('refreshToken', refreshToken, {
         expires: 7, // 7 days
-        secure: true,
+        secure: isProduction,
         sameSite: 'Strict',
         path: '/'
       })
 
       storeUser(rest as UserProfile);
-      router.push('/dashboard')
+      router.push('/dashboard');
 
     }
   })

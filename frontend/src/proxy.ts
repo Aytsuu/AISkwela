@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export default function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl; 
   const token = request.cookies.get('accessToken')?.value;
   const isAuthPage = request.nextUrl.pathname === '/authentication/login' || request.nextUrl.pathname === '/authentication/signup';
+  const isPublicPath = pathname === '/' || pathname.startsWith('/authentication');
+
+  if (!isPublicPath && !token) {
+    return NextResponse.redirect(new URL('/authentication/login', request.url));
+  }
 
   if (token && isAuthPage) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
@@ -14,5 +20,5 @@ export default function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/((?!api|_next/static|_next/image|favicon.ico).*)'
-  ]
+  ] 
 }

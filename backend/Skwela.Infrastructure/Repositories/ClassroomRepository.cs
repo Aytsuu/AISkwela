@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Skwela.Application.Interfaces;
 using Skwela.Infrastructure.Data;
 using Skwela.Domain.Entities;
+using Skwela.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Skwela.Infrastructure.Repositories;
@@ -31,6 +32,36 @@ public class ClassroomRepository : IClassroomRepository
         return await _context.Classrooms
             .Where(c => c.user_id == userId)
             .ToListAsync();
+    }
+
+    public async Task<Classroom> GetClassroomDataAsync(Guid classId, Guid userId, UserRole role)
+    {
+        var classroom = await _context.Classrooms
+            .Include(c => c.user)
+            .FirstOrDefaultAsync(c => c.class_id == classId);
+
+        if (classroom == null)
+        {
+            throw new KeyNotFoundException("Classroom not found.");
+        }
+
+        if (role == UserRole.teacher && classroom.user_id != userId) // Applies to teachers
+        {
+            throw new UnauthorizedAccessException("You do not have access to this classroom.");
+        }
+        else if(role == UserRole.student) // Applies to students
+        {
+            var isEnrolled = await _context.Enrollments
+                .AnyAsync(e => e.class_id == classId && e.user_id == userId);
+
+            if (!isEnrolled)
+            {
+                throw new UnauthorizedAccessException("You are not enrolled in this classroom.");
+            }
+        }
+
+        return classroom;
+
     }
 
 }

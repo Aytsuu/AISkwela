@@ -16,7 +16,7 @@ public class User
     public DateTime refreshTokenExpiryTime { get; set; }
     public ICollection<Classroom> classrooms { get; set; } = new List<Classroom>();
 
-    public static User Create(string username, string password)
+    public static User Build(string username, string password)
     {
         if(string.IsNullOrWhiteSpace(username))
         {
@@ -35,7 +35,7 @@ public class User
             password = password,
             display_name = username,
             display_image = "https://res.cloudinary.com/dzcmadjl1/image/upload/v1694868283/default_profile_image_oqxv6r.png",
-            role = UserRole.Student
+            role = UserRole.student
         };
     }
 
